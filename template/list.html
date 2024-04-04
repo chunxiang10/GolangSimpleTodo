@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0">
+	<link rel="icon" href="/static/img/favicon.ico">
+	<link rel="stylesheet" href="/static/layui/css/layui.css">
+	<link rel="stylesheet" href="/static/css/todo.css">
+	<script src="/static/layui/layui.js"></script>
+	<title>Todo</title>
+	<style>
+		.layui-icon {
+			font-size: 26px;
+		}
+	</style>
+</head>
+
+<body>
+
+	<div class="layui-container">
+		<div class="row">
+			<div class="layui-col-md6 layui-col-md-offset3">
+				<!-- title -->
+				<div class="layui-text" style="margin:20px auto;">
+					<h1 class="layui-layer-btn-c">Simple Todo List</h1>
+				</div>
+				<!-- list -->
+				<table class="layui-table" lay-skin="nob" style="margin-top: 30px;">
+					<colgroup>
+						<col>
+						<col width="50">
+					</colgroup>
+					<tbody>
+						{{range .}}
+							<tr>
+							<td>
+								<div class="layui-form">
+									{{if .Completed}}
+									<input type="checkbox" title="{{.Content}}" value="{{.ID}}" lay-filter="todo-list" checked>
+									{{else}}
+									<input type="checkbox" title="{{.Content}}" value="{{.ID}}" lay-filter="todo-list">
+									{{end}}
+								</div>
+							</td>
+							<td>
+								<button id="del-todo" class="layui-btn layui-btn-primary layui-border-red" data-id="{{.ID}}" lay-filter="delete" style="border: 0px;padding: 0;">
+									<i style="font-size: 26px;color: red;" class="layui-icon layui-icon-delete"></i>
+								</button>
+							</td>
+						</tr>
+						{{end}}
+					</tbody>
+				</table>
+				<div class="layui-layer-btn-c">
+				<a class="layui-btn layui-btn-normal" href="/">返回</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script>
+		layui.use(function(){
+			var form = layui.form;
+			var util = layui.util;
+			var $ = layui.jquery;
+			// checkbox 事件
+			form.on('checkbox(todo-list)', function(data){
+				var elem = data.elem; // 获得 checkbox 原始 DOM 对象
+				var checked = elem.checked; // 获得 checkbox 选中状态
+				var value = elem.value; // 获得 checkbox 值
+				// layer.msg('checked 状态: '+ elem);
+				if (checked == true || checked == false) {
+					$.ajax({
+						url: "/edit",
+						data:JSON.stringify({"id": parseInt(value)}),
+						type: "POST",
+						dataType: 'json',
+						success: function(res){
+							console.log(res)
+						}
+					})
+				}
+			});
+			util.event('lay-filter',{
+				delete:function(res){
+					console.log(res[0].attributes["data-id"].value)
+					var id = res[0].attributes["data-id"].value
+					$.ajax({
+						url: "/del",
+						data:JSON.stringify({"id": parseInt(id)}),
+						type: "POST",
+						dataType: 'json',
+						success: function(res){
+							window.location.reload()
+						}
+					})
+				}
+			})
+		});
+		
+		</script>
+
+</body>
+</html>

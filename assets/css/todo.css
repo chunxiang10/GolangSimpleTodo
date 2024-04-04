@@ -1,0 +1,15 @@
+
+
+.layui-form-checkbox[lay-skin="primary"] > i {
+    transform: scale(1.6,1.6);
+}
+.layui-form-checkbox > div {
+    font-size: 18px;
+
+}
+.layui-form-checked > div {
+    text-decoration: line-through;
+}
+table, th, tr, td {
+    border-bottom: 1px solid #d2d2d2;
+}
