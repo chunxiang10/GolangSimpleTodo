@@ -33,7 +33,7 @@
 					</div>
 				</form>
 				<!-- list -->
-				<table class="layui-table" lay-skin="nob" style="margin-top: 30px;">
+				<table class="layui-table" lay-skin="nob" style="margin-top: 10px;">
 					<colgroup>
 						<col>
 						<col width="50">
@@ -61,12 +61,27 @@
 					</tbody>
 				</table>
 				<div class="layui-layer-btn-c">
-					<a class="layui-btn layui-btn-normal" href="list">查看全部</a>
+					<a class="layui-btn layui-btn-normal" href="/list">查看全部</a>
 				</div>
 			</div>
 		</div>
 	</div>
-
+	<script src="/static/jquery-1.12.4.min.js"></script>
+	<!-- <script>
+		$(function(){
+			var token = localStorage.getItem('token')
+			$.ajax({
+				url: "/list",
+				type: "GET",
+				headers:{
+					'Authorization': "Bearer "+token
+				},
+				success: function(res){
+					console.log(res)
+				}
+			})
+		})
+	</script> -->
 	<script>
 		layui.use(function(){
 			var form = layui.form;
@@ -79,8 +94,7 @@
 				var value = elem.value; // 获得 checkbox 值
 				var othis = data.othis; // 获得 checkbox 元素被替换后的 jQuery 对象
 				// layer.msg('checked 状态: '+ elem);
-				console.log(checked)
-				console.log(value)
+				console.log(othis)
 				if (checked == true || checked == false) {
 					$.ajax({
 						url: "/edit",
@@ -89,6 +103,7 @@
 						dataType: 'json',
 						success: function(){
 							$("#todo-"+value).addClass("layui-hide")
+							window.location.reload(true)
 						}
 					})
 				}

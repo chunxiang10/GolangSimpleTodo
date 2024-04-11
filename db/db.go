@@ -1,6 +1,8 @@
 package db
 
 import (
+	"os"
+
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 	"gorm.io/gorm/schema"
@@ -10,6 +12,9 @@ var Db *gorm.DB
 
 func init() {
 	var err error
+	if _, err := os.Stat("./data"); err != nil {
+		os.Mkdir("./data", 0755)
+	}
 	path := "data/todo.db"
 	Db, err = gorm.Open(sqlite.Open(path), &gorm.Config{
 		NamingStrategy: schema.NamingStrategy{
