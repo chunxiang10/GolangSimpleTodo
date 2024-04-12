@@ -2,6 +2,7 @@ package model
 
 import (
 	"simple-todo/db"
+	"simple-todo/utils"
 	"time"
 
 	"gorm.io/gorm"
@@ -19,7 +20,10 @@ type User struct {
 
 func init() {
 	d := db.DbInit()
-	// var user = &User{Uid: "admin", Password: utils.EncryMd5("123456")}
-	// d.Create(&user)
 	d.AutoMigrate(&User{})
+	err := d.Where("uid = ?", "admin").First(&User{}).RowsAffected
+	if err == 0 {
+		var user = &User{Uid: "admin", Password: utils.EncryMd5("123456")}
+		d.Create(&user)
+	}
 }
